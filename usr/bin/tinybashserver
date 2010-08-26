@@ -57,10 +57,6 @@ function aboutMe(){
 	local hn="${v1#*:}"	
 	echo -e "<br/><br/><hr/><i>Tiny Bash Server running at" ${hn:-`hostname`} "</i>"
 }
-function Bye(){
-	echo "Bye"
-	exit 0
-}
 
 ## Main
 parseHttpRequest
@@ -120,3 +116,5 @@ else
 	aboutMe
 	echo -e "\r"	
 fi	
+
+exit 0
