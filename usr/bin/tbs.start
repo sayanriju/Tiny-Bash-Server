@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 0 -a -f "$1" ];then
+	. "$1"
+else
+	. "/etc/tbs/default.config"
+fi
+lockfile="/tmp/tbs.$PORT.lck" 
+if [ -f "$lockfile" ];then
+	#[ $QUIET -eq 0 ] && 
+	echo "Tiny Bash Server is already running on port $PORT with PID" `head -1 "$lockfile"`
+	echo "Aborting."
+	exit 2
+fi 
+echo -e "$$\n"Started by `whoami` at `date` > "$lockfile"
+while /bin/true;do
+	if [ -f "$lockfile" ];then
+		if [ $QUIET -eq 0 ];then
+			nc -vlp "$PORT" -c "/usr/bin/tinybashserver $DOCROOT $DEFAULT_INDEX" 
+		else
+			nc -lp "$PORT" -c "/usr/bin/tinybashserver $DOCROOT $DEFAULT_INDEX" 2>&1 >/dev/null
+		fi
+	else
+		break;
+	fi
+done
+[ $QUIET -eq 0 ] && echo -e "\nBye Bye!"
+exit 0

@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+DOCROOT="$1"
+DEFAULT_INDEX="$2"
+DOCROOT=${DOCROOT:-"/var/www/"}
+DEFAULT_INDEX=${DEFAULT_INDEX:-"index.html"}
+
+function parseHttpRequest(){
+read request
+local line=''
+while /bin/true; do
+  read line
+  [ "$line" == $'\r' ] && break;
+  header="$header\n$line"
+done
+header="${header#??}"
+
+echo "$request" | grep -qi "POST"
+if [ $? -eq 0 ];then		# POST type; get message body & set var $type
+	type="POST"
+	while /bin/true; do
+	  read line
+	  [ "$line" == $'\r' -o "$line" == '' ] && break;
+	  body="$body\n$line"
+	done
+	body="${body#??}"
+else 			# GET type; set var $type
+	type="GET"
+fi
+}
+function parseRequestUrl(){
+	query_str=''
+	if [ "$type" == "POST" ];then		# POST
+		url="${request#POST }"
+		query_str="$body"		
+	else 						# GET
+		url="${request#GET }"
+		echo "$url" | grep -q "?"
+		[ $? -eq 0 ]  && query_str="${url/*\?/}"
+	fi
+	url="${url% HTTP/*}"
+	url="${url#/}"
+	url="${url/\?*/}"
+	query_str="${query_str% HTTP/*}"
+	#query_str="${query_str//&/&&}"
+}
+function createVariableString(){
+	local v1=`echo -e "$header"|grep "^Host"`
+	local hn="${v1#*: }"
+	local ua=`echo -e "$header"|grep "^User-Agent"`
+	var_str="DOCUMENT_ROOT=\"$DOCROOT\"&&HTTP_HOST=\"$hn\"&&HTTP_USER_AGENT=\"$ua\"&&QUERY_STRING=\"$query_str\"&&REQUEST_METHOD=\"$type\"&&REQUEST_URI=\"$url\""
+}
+
+
+function aboutMe(){
+	local v1=`echo -e "$header"|grep "^Host"`
+	local hn="${v1#*:}"	
+	echo -e "<br/><br/><hr/><i>Tiny Bash Server running at" ${hn:-`hostname`} "</i>"
+}
+function Bye(){
+	echo "Bye"
+	exit 0
+}
+
+## Main
+parseHttpRequest
+parseRequestUrl
+createVariableString
+
+filename="$DOCROOT$url"
+if [ -d "$filename" ];then
+	filename="$filename/$DEFAULT_INDEX"
+fi
+# Decide & send repsonse
+if [ ! -f "$filename" ];then
+	echo -e "HTTP/1.0 404 Not Found\r"
+	echo -e "Date:" `date`
+	echo -e "Content-Type: text/html\r"
+	echo -e "\r"
+	echo -e "<h1>404 Not Found</h1>\r"
+	echo -e "The requested resource was not found\r"
+	aboutMe
+	echo -e "\r"
+elif [ -r "$filename" ];then
+	echo -e "HTTP/1.1 200 OK\r"
+	echo -e "Date:" `date`
+	case "${filename##*.}" in
+		"htsh") echo -e "Content-Type: text/html\r"
+				echo -e "\r"
+				/usr/bin/htsh "$filename" "`echo $var_str`"
+		;;
+		"sh") 	echo -e "Content-Type: text/html\r"
+				echo -e "\r"
+				/bin/bash "$filename" "`echo $var_str`"
+		;;
+		"html") echo -e "Content-Type: text/html\r"
+				echo -e "\r"
+				cat "$filename"		
+		;;
+		"php")  echo -e "Content-Type: text/html\r"
+				echo -e "\r"
+				/usr/bin/php "$filename" "`echo $var_str`"
+		;;
+		"py")  echo -e "Content-Type: text/html\r"
+				echo -e "\r"
+				/usr/bin/python "$filename"		
+		;;
+		"*")	echo -e "Content-Type: `/usr/bin/file -bi \"$filename\"`\r"
+				echo -e "\r"
+				cat "$filename"
+		;;
+	esac
+else
+	echo -e "HTTP/1.0 403 Forbidden\r"
+	echo -e "Date:" `date`
+	echo -e "Content-Type: text/html\r"
+	echo -e "\r"
+	echo -e "<h1>403 Forbidden</h1>\r"
+	echo -e "You do not have permissions to access the requested resource\r"
+	aboutMe
+	echo -e "\r"	
+fi	
