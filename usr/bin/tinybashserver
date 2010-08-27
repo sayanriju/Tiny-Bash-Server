@@ -101,9 +101,9 @@ elif [ -r "$filename" ];then
 				echo -e "\r"
 				/usr/bin/python "$filename"		
 		;;
-		"*")	echo -e "Content-Type: `/usr/bin/file -bi \"$filename\"`\r"
-				echo -e "\r"
-				cat "$filename"
+		*)	echo -e "Content-Type: `/usr/bin/file -bi \"$filename\"`\r"
+			echo -e "\r"
+			cat "$filename"
 		;;
 	esac
 else
