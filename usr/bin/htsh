@@ -35,7 +35,7 @@ while read line;do
 		fi	
 	fi
 	# Start tag
-	echo "$line"|grep -q "^<?bash\|^<?"
+	echo "$line" | sed 's/^ *//'| grep -q "^<?bash\|^<?"
 	if [ $? -eq 0 ];then
 		if [ $flag -eq 0 ];then
 			flag=1
