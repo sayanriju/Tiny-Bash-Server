@@ -46,7 +46,8 @@ function parseRequestUrl(){
 }
 function createVariableString(){
 	local v1=`echo -e "$header"|grep "^Host"`
-	local hn="${v1#*: }"
+	local hn="${v1#*:}"
+	hn=${hn// /}
 	local ua=`echo -e "$header"|grep "^User-Agent"`
 	var_str="DOCUMENT_ROOT=\"$DOCROOT\"&&HTTP_HOST=\"$hn\"&&HTTP_USER_AGENT=\"$ua\"&&QUERY_STRING=\"$query_str\"&&REQUEST_METHOD=\"$type\"&&REQUEST_URI=\"$url\""
 }

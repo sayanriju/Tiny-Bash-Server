@@ -11,7 +11,7 @@ txt=''
 while read line;do
 	let lc=lc+1
 	# Start and end tags in same line
-	echo "$line"| grep -e "<?.*?>"  -e "<?bash.*?>"
+	echo "$line"| grep -qe "<?.*?>"  -qe "<?bash.*?>"
 	if [ $? -eq 0 ];then
 		if [ $flag -eq 0 ];then
 			line=${line//<?bash/<?}
