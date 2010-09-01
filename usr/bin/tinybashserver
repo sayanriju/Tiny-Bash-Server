@@ -6,35 +6,36 @@ DOCROOT=${DOCROOT:-"/var/www/"}
 DEFAULT_INDEX=${DEFAULT_INDEX:-"index.html"}
 
 function parseHttpRequest(){
-read init_req_line
-local line=''
-while /bin/true; do
-  read line
-  [ "$line" == $'\r' ] && break;
-  header="$header\n$line"
-done
-header="${header#??}"
+	read init_req_line
+	local line=''
+	local cont_len=0
+	while /bin/true; do
+	  read line
+	  [ "$line" == $'\r' ] && break;
+	  if [[ "$line" =~ ^Content-Length ]];then
+		# MUST strip the CRLF to get integer value
+		cont_len=`echo -e "$line" |sed 's/\r$//'| cut -d: -f2`
+	  fi
+	  header="$header\n$line"
+	done
+	header="${header#??}"
 
-#echo "$init_req_line" | grep -qi "POST"
-#if [ $? -eq 0 ];then		# POST type; get message body & set var $type
-if [[ "$init_req_line" =~ ^POST ]];then
-	type="POST"
-	#~ body=''
-	#~ while /bin/true;do
-		#~ read -n 1 c;
-		#~ [ "$c" == '' ] && break;
-		#~ body="$body$c"
-	#~ done
-	body="${body#??}"
-elif [[ "$init_req_line" =~ ^GET ]] ;then			# GET type; set var $type
-	type="GET"
-else
-	type=""
-fi
+	if [[ "$init_req_line" =~ ^POST ]];then	# POST method; get message body & set var $method
+		method="POST"
+		body=''
+		IFS=''
+		# If there is matter in msg body, get it for QUERY_STRING
+		[ "$cont_len" -ne 0 ] && read -n $cont_len body;
+		unset IFS
+	elif [[ "$init_req_line" =~ ^GET ]] ;then			# GET method; set var $method
+		method="GET"
+	else
+		method=""										# Unknown method
+	fi
 }
 function parseRequestUrl(){
 	query_str=''
-	if [ "$type" == "POST" ];then		# POST
+	if [ "$method" == "POST" ];then		# POST
 		url="${init_req_line#POST }"
 		query_str="$body"		
 	else 						# GET
@@ -53,7 +54,7 @@ function createVariableString(){
 	local hn="${v1#*:}"
 	hn=${hn// /}
 	local ua=`echo -e "$header"|grep "^User-Agent"`
-	var_str="DOCUMENT_ROOT=\"$DOCROOT\"&&HTTP_HOST=\"$hn\"&&HTTP_USER_AGENT=\"$ua\"&&QUERY_STRING=\"$query_str\"&&REQUEST_METHOD=\"$type\"&&REQUEST_URI=\"$url\""
+	var_str="DOCUMENT_ROOT=\"$DOCROOT\"&&HTTP_HOST=\"$hn\"&&HTTP_USER_AGENT=\"$ua\"&&QUERY_STRING=\"$query_str\"&&REQUEST_METHOD=\"$method\"&&REQUEST_URI=\"$url\""
 }
 
 function commonHeader(){
@@ -100,7 +101,7 @@ if [ -d "$filename" ];then
 	filename="$filename/$DEFAULT_INDEX"
 fi
 # Is there an error?
-if [ -z "$type" ];then
+if [ -z "$method" ];then
 	errorResponse "400"
 	exit 400
 fi
@@ -117,7 +118,8 @@ commonHeader "200" "OK"
 case "${filename##*.}" in
 	"htsh") echo -e "Content-Type: text/html\r"
 			echo -e "\r"
-			echo "$body"------
+			echo "$header"------
+			echo "<h4>$cont_len</h4>"
 			/usr/bin/cgibash "$filename" "`echo $var_str`"				
 	;;
 	"sh") 	echo -e "Content-Type: text/html\r"
