@@ -118,8 +118,6 @@ commonHeader "200" "OK"
 case "${filename##*.}" in
 	"htsh") echo -e "Content-Type: text/html\r"
 			echo -e "\r"
-			echo "$header"------
-			echo "<h4>$cont_len</h4>"
 			/usr/bin/cgibash "$filename" "`echo $var_str`"				
 	;;
 	"sh") 	echo -e "Content-Type: text/html\r"
