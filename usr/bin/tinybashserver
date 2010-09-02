@@ -14,7 +14,7 @@ function parseHttpRequest(){
 	  [ "$line" == $'\r' ] && break;
 	  if [[ "$line" =~ ^Content-Length ]];then
 		# MUST strip the CRLF to get integer value
-		cont_len=`echo -e "$line" |sed 's/\r$//'| cut -d: -f2`
+		cont_len=`echo -e "$line" |tr -d '\r' | cut -d: -f2`
 	  fi
 	  header="$header\n$line"
 	done
