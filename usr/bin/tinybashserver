@@ -26,6 +26,7 @@ function parseHttpRequest(){
 		IFS=''
 		# If there is matter in msg body, get it for QUERY_STRING
 		[ "$cont_len" -ne 0 ] && read -n $cont_len body;
+		body=${body//+/}	# Remove + sign from body (in form field submission with space)
 		unset IFS
 	elif [[ "$init_req_line" =~ ^GET ]] ;then			# GET method; set var $method
 		method="GET"
