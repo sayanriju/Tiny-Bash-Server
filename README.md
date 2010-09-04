@@ -5,7 +5,6 @@ Author: Sayan "Riju" Chakrabarti
 Contact: me[at]sayanriju.co.cc  
 Software License: GNU GPL v3
 
------------------------------------------------------------------------
 
 About
 --------
@@ -25,7 +24,6 @@ After all, this project is rather a hack, and was coded just for fun and some so
 A nice use for TBS might be to develop browser-based frontends to bash scripts for local usage, in which
 scenarios it carries lesser overhead than full-blown server setups.
 
------------------------------------------------------------------------
 
 Requirements
 --------------------
@@ -43,7 +41,6 @@ Following are the requirements for running TBS which are nominal, and are expect
 **Note:** Netcat must be compiled with option `-DGAPING_SECURITY_HOLE` enabled. Also, a working /bin/sh is required (Note that POSIX-conformant system must have 
 one)
 
------------------------------------------------------------------------
 
 Installation & Usage
 ---------------------
@@ -77,7 +74,6 @@ it will try to stop TBS on port 1983 (default).
 Note that, you may need to pass one more request to the server after issuing the above command, before TBS actually stops.
 If the instance is running with option QUIET=0, a simple CTRL+C on the terminal where tbs.start is running would suffice!
 
------------------------------------------------------------------------
 
 
 CGI Style Scripting with .htsh files
@@ -104,10 +100,5 @@ These variables are available as normal bash variables within .htsh scripts, aft
 
 line be included.
 
-
-
-
-
------------------------------------------------------------------------
 
 
