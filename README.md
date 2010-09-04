@@ -2,7 +2,7 @@ Tiny Bash Server
 =====================
 
 Author: Sayan "Riju" Chakrabarti  
-Contact: me[at]sayanriju.co.cc
+Contact: me[at]sayanriju.co.cc  
 Software License: GNU GPL v3
 
 -----------------------------------------------------------------------
@@ -95,7 +95,7 @@ The following "Environment Variables" are passed by the server to the CGI for us
 >`REQUEST_METHOD`  
 >`REQUEST_URI` 
 
-All of the above carry their usual meaning, except QUERY_STRING, which is a bit different for TBS.
+All of the above carry their usual meanings, except QUERY_STRING, which is a bit different for TBS.
 In most other servers, this variable is valid only in case of GET requests and refers to the part of the URL after ?
 In TBS though, this variable is valid for POST requests as well, and has the same format as for GET (e.g myvar1=0&myvar2=1)
 
