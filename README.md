@@ -79,7 +79,8 @@ If the instance is running with option QUIET=0, a simple CTRL+C on the terminal 
 CGI Style Scripting with .htsh files
 ------------------------------------
 
-TBS allows CGI style scritping with .htsh files, which contains normal HTML with bash code embedded within.
+TBS allows CGI style scritping with .htsh files (which contains normal HTML with bash code embedded within) by
+means of an included htsh parser.  
 All bash codes are to be enclosed within `<?bash ... ?>` or in short, `<? ... ?>` tags. 
 
 The following "Environment Variables" are passed by the server to the CGI for usage within the .htsh:
@@ -92,13 +93,10 @@ The following "Environment Variables" are passed by the server to the CGI for us
 >`REQUEST_URI` 
 
 All of the above carry their usual meanings, except QUERY_STRING, which is a bit different for TBS.
-In most other servers, this variable is valid only in case of GET requests and refers to the part of the URL after ?
+In most other servers, this variable is valid only in case of GET requests and refers to the part of the URL after the ?  
 In TBS though, this variable is valid for POST requests as well, and has the same format as for GET (e.g myvar1=0&myvar2=1)
 
-These variables are available as normal bash variables within .htsh scripts, after a  
->`eval "$1"`  
-
-line be included.
+All these are available as normal bash variables within .htsh scripts.  
 
 
 

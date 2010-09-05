@@ -3,7 +3,7 @@
 ## N.B. $1 -> Name of .htsh script
 ##		$2 -> Arguments sent by server to script
 tmpfile="/tmp/tbs.tmp"
->"$tmpfile"	
+echo -e "eval \"$1\"" >"$tmpfile" # Makes Environmental variables available
 
 flag=0
 lc=0
