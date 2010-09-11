@@ -8,17 +8,26 @@ fi
 lockfile="/tmp/tbs.$PORT.lck" 
 if [ -f "$lockfile" ];then
 	#[ $QUIET -eq 0 ] && 
-	echo "Tiny Bash Server is already running on port $PORT with PID" `head -1 "$lockfile"`
+	echo "Tiny Bash Server is already running on port $PORT"
 	echo "Aborting."
 	exit 2
 fi 
-echo -e "$$\n"Started by `whoami` at `date` > "$lockfile"
+
+## lockfile == run/exec script for nc -e
+cat <<EOF >"$lockfile"
+#!/usr/bin/env bash
+## PID $$ started by $USER at `date`
+
+/usr/bin/tinybashserver $DOCROOT $DEFAULT_INDEX
+EOF
+chmod a+x "$lockfile"
+
 while /bin/true;do
 	if [ -f "$lockfile" ];then
 		if [ $QUIET -eq 0 ];then
-			nc -vlp "$PORT" -c "/usr/bin/tinybashserver $DOCROOT $DEFAULT_INDEX" 
+			nc -vlp "$PORT" -e "$lockfile"  
 		else
-			nc -lp "$PORT" -c "/usr/bin/tinybashserver $DOCROOT $DEFAULT_INDEX" 2>&1 >/dev/null
+			nc -lp "$PORT" -e "$lockfile" 2>&1 >/dev/null
 		fi
 	else
 		break;

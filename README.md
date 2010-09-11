@@ -59,10 +59,10 @@ This will start TBS based on options specifed in the configuration file (optiona
 If no argument be passed, it uses the following default configuration file located at /etc/tbs/default.config   
 whose syntax may be used as reference:
 
->`DOCROOT=/var/www/`  
->`PORT=1983`  
->`DEFAULT_INDEX=index.html`  
->`QUIET=0`
+>`DOCROOT=/var/www/    
+>PORT=1983  
+>DEFAULT_INDEX=index.html  
+>QUIET=0  `
 
 ####To stop TBS:
 
@@ -79,18 +79,18 @@ If the instance is running with option QUIET=0, a simple CTRL+C on the terminal 
 CGI Style Scripting with .htsh files
 ------------------------------------
 
-TBS allows CGI style scritping with .htsh files (which contains normal HTML with bash code embedded within) by
+TBS allows CGI style scripting with .htsh files (which contains normal HTML with bash code embedded within) by
 means of an included htsh parser.  
 All bash codes are to be enclosed within `<?bash ... ?>` or in short, `<? ... ?>` tags. 
 
 The following "Environment Variables" are passed by the server to the CGI for usage within the .htsh:
 
->`DOCUMENT_ROOT`   
->`HTTP_HOST`  
->`HTTP_USER_AGENT`  
->`QUERY_STRING`  
->`REQUEST_METHOD`  
->`REQUEST_URI` 
+>`DOCUMENT_ROOT  
+>HTTP_HOST    
+>HTTP_USER_AGENT  
+>QUERY_STRING  
+>REQUEST_METHOD  
+>REQUEST_URI`  
 
 All of the above carry their usual meanings, except QUERY_STRING, which is a bit different for TBS.
 In most other servers, this variable is valid only in case of GET requests and refers to the part of the URL after the ?  
