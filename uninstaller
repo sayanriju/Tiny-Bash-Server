@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ $UID -ne 0 ];then
+	echo "This installer script must be run as root"
+	echo "Aborting."
+	exit 1
+fi
+
+echo "Are you sure you want to completely uninstall Tiny Bash Server? [y/N]:"
+read resp
+if [[ $resp =~ Y|y ]];then
+	rm -vf /usr/bin/{tbs.start,tbs.stop,tinybashserver,htsh}
+	rm -rvf /etc/tbs
+	rm -rvf /usr/share/docs/tbs
+	echo -e "\nFinished uninstalling Tiny Bash Server"
+fi
+exit 0
