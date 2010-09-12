@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ $UID -ne 0 ];then
+	echo "This installer script must be run as root"
+	echo "Aborting."
+	exit 1
+fi
+
+chmod -v a+x usr/bin/*
+cp -rv --preserve=mode {etc/,usr/} /
+mkdir -pv /usr/share/docs/tbs
+cp -pv README* /usr/share/docs/tbs/
+
+echo "Finished with installing Tiny Bash Server"
+echo "You can start it using tbs.start [/path/to/config/file]"
+echo "Read the documentation(s) under /usr/share/docs/tbs/ for further details"
+exit 0
+
+
+	
+
