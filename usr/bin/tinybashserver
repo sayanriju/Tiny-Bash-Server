@@ -119,7 +119,7 @@ commonHeader "200" "OK"
 case "${filename##*.}" in
 	"htsh") echo -e "Content-Type: text/html\r"
 			echo -e "\r"
-			/usr/bin/cgibash "$filename" "`echo $var_str`"				
+			/usr/bin/htsh "$filename" "`echo $var_str`"				
 	;;
 	"sh") 	echo -e "Content-Type: text/html\r"
 			echo -e "\r"
