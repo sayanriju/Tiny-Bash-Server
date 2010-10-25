@@ -49,6 +49,9 @@ After downloading, the contained files are to be placed under / maintaining the 
 executable permissions.  
 Right now, the default installation options are rather hard coded.
 
+P.S: Now there's a simple installer script to automate the above process. An uninstaller script is also added 
+to do just the opposite.
+
 ####To start TBS:
 
 

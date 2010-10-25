@@ -96,6 +96,24 @@ EOF
 parseHttpRequest
 parseRequestUrl
 createVariableString
+## Handle urlencoded url
+urldecode() {
+	arg="$1"
+	i="0"
+	while [ "$i" -lt ${#arg} ]; do
+		c0=${arg:$i:1}
+		if [ "x$c0" = "x%" ]; then
+			c1=${arg:$((i+1)):1}
+			c2=${arg:$((i+2)):1}
+			printf "\x$c1$c2"
+			i=$((i+3))
+		else
+			echo -n "$c0"
+			i=$((i+1))
+		fi
+	done
+}
+url=`urldecode "$url"`
 
 filename="$DOCROOT$url"
 if [ -d "$filename" ];then
@@ -119,7 +137,7 @@ commonHeader "200" "OK"
 case "${filename##*.}" in
 	"htsh") echo -e "Content-Type: text/html\r"
 			echo -e "\r"
-			/usr/bin/htsh "$filename" "`echo $var_str`"				
+			/usr/bin/htsh "$filename" "$var_str" #"`echo $var_str`"				
 	;;
 	"sh") 	echo -e "Content-Type: text/html\r"
 			echo -e "\r"

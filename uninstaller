@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $UID -ne 0 ];then
-	echo "This installer script must be run as root"
+	echo "This uninstaller script must be run as root"
 	echo "Aborting."
 	exit 1
 fi
