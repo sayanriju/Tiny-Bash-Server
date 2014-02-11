@@ -3,6 +3,7 @@ Tiny Bash Server
 
 Author: Sayan "Riju" Chakrabarti  
 Contact: s26c[dot]sayan[at]gmail.com
+
 Software License: GNU GPL v3
 
 
