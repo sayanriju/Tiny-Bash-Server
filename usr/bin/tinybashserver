@@ -11,7 +11,7 @@ function parseHttpRequest(){
 	local cont_len=0
 	while /bin/true; do
 	  read line
-	  [ "$line" == $'\r' ] && break;
+	  [ "$line" = $'\r' ] && break;
 	  if [[ "$line" =~ ^Content-Length ]];then
 		# MUST strip the CRLF to get integer value
 		cont_len=`echo -e "$line" |tr -d '\r' | cut -d: -f2`
