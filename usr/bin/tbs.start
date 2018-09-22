@@ -25,9 +25,9 @@ chmod a+x "$lockfile"
 while /bin/true;do
 	if [ -f "$lockfile" ];then
 		if [ $QUIET -eq 0 ];then
-			nc -vlp $HOST $PORT -e "$lockfile"  
+			nc -vl $HOST $PORT -e "$lockfile"  
 		else
-			nc -lp $HOST $PORT -e "$lockfile" 2>&1 >/dev/null
+			nc -l $HOST $PORT -e "$lockfile" 2>&1 >/dev/null
 		fi
 	else
 		break;
