@@ -22,16 +22,13 @@ cat <<EOF >"$lockfile"
 EOF
 chmod a+x "$lockfile"
 
-while /bin/true;do
-	if [ -f "$lockfile" ];then
-		if [ $QUIET -eq 0 ];then
-			nc -vlp "$PORT" -e "$lockfile"  
-		else
-			nc -lp "$PORT" -e "$lockfile" 2>&1 >/dev/null
-		fi
+if [ -f "$lockfile" ];then
+	if [ $QUIET -eq 0 ];then
+		ncat -v --keep-open --listen $HOST $PORT -e "$lockfile"  
 	else
-		break;
+		ncat --keep-open --listen $HOST $PORT -e "$lockfile" 2>&1 >/dev/null
 	fi
-done
+fi
+
 [ $QUIET -eq 0 ] && echo -e "\nBye Bye!"
 exit 0

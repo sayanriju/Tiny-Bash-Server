@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-## N.B. $1 -> Name of .htsh script
-##		$2 -> Arguments sent by server to script
-tmpfile="/tmp/tbs.tmp"
+## $1 -> Name of .htsh script
+## $2 -> Arguments sent by server to script
+tmpfile="/tmp/tbs_$(echo $RANDOM)_$(uuid).tmp"
 echo 'eval "$1"' >"$tmpfile" # Makes Environmental variables available
 
 flag=0
