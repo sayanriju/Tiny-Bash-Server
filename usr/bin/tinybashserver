@@ -57,6 +57,7 @@ function createVariableString(){
 	local ua=`echo -e "$header"|grep "^User-Agent"`
 	var_str="DOCUMENT_ROOT=\"$DOCROOT\"&&HTTP_HOST=\"$hn\"&&HTTP_USER_AGENT=\"$ua\"&&QUERY_STRING=\"$query_str\"&&REQUEST_METHOD=\"$method\"&&REQUEST_URI=\"$url\""
 }
+# NOTE: don't use HTTP/1.1 if you have any sub process in your script page (htsh,sh)
 function commonHeader(){
 	echo -e "HTTP/1.0 $1 $2"	
 	echo -e "Date:" `date`
